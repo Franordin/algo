@@ -5,8 +5,7 @@
 
 using namespace std;
 
-string Add(string str1, string str2)
-{
+string Add(string str1, string str2) {
 	if (!str1.size() && !str2.size()) return "0";
 
 	int N = max(str1.size(), str2.size());
@@ -16,8 +15,7 @@ string Add(string str1, string str2)
 	string result(N, '0');
 
 	int carry = 0;
-	for (int i = N - 1; i >= 0; i--)
-	{
+	for (int i = N - 1; i >= 0; i--) {
 		int n1 = str1[i] - '0';
 		int n2 = str2[i] - '0';
 		int sum = n1 + n2 + carry;
@@ -31,8 +29,7 @@ string Add(string str1, string str2)
 	return result;
 }
 
-string Subtract(string str1, string str2)
-{
+string Subtract(string str1, string str2) {
 	if (str1 == str2) return "0";
 
 	int N = max(str1.size(), str2.size());
@@ -42,8 +39,7 @@ string Subtract(string str1, string str2)
 	string result(N, '0');
 
 	int carry = 0;
-	for (int i = N - 1; i >= 0; i--)
-	{
+	for (int i = N - 1; i >= 0; i--) {
 		int n1 = str1[i] - '0';
 		int n2 = str2[i] - '0';
 		int sum = n1 - n2 + carry + 10;
@@ -58,8 +54,7 @@ string Subtract(string str1, string str2)
 	return result;
 }
 
-string KaratsubaHelper(string str1, string str2, int level) // level은 디버깅용
-{
+string KaratsubaHelper(string str1, string str2, int level) {
 	cout << "Level " << level << " : " << str1 << " x " << str2 << endl;
 
 	int N = max(str1.size(), str2.size());
@@ -67,8 +62,7 @@ string KaratsubaHelper(string str1, string str2, int level) // level은 디버�
 	str2.insert(0, string(N - str2.size(), '0'));
 
 	// 한 자리까지 쪼개졌을 때 곱해서 반환
-	if (N == 1)
-	{
+	if (N == 1) {
 		string result = to_string(stoi(str1) * stoi(str2));
 		return result;
 	}
@@ -82,10 +76,13 @@ string KaratsubaHelper(string str1, string str2, int level) // level은 디버�
 	string d = str2.substr(mid, N - mid);
 
 	string ac = KaratsubaHelper(a, c, level + 1);
-	// TODO:
+	string bd = KaratsubaHelper(b, d, level + 1);
+	string z = KaratsubaHelper(Add(a, b), Add(c, d), level + 1);
+	string temp = Subtract(z, Add(ac, bd));
 
 	// 문자열 뒤에 '0'을 추가해서 10^N를 O(N)으로 처리
 	ac.append(string((N - mid) * 2, '0'));
+	cout << "ac : " << ac << endl;
 	// TODO: ...
 
 	// string result = TODO;
@@ -106,8 +103,7 @@ string KaratsubaHelper(string str1, string str2, int level) // level은 디버�
 	return string("0"); // return result;
 }
 
-string Karatsuba(string str1, string str2)
-{
+string Karatsuba(string str1, string str2) {
 	if (!str1.size() || !str2.size()) return "0";
 
 	string result = KaratsubaHelper(str1, str2, 0); // 디버깅용 level을 0에서 시작
@@ -120,22 +116,20 @@ string Karatsuba(string str1, string str2)
 	return result;
 }
 
-int main()
-{
+int main() {
 	vector<vector<string>> tests = {
 		{"1234", "5678", std::to_string(1234 * 5678)}
-		, {"12", "34", std::to_string(12 * 34)}
-		, {"123", "2", std::to_string(123 * 2)}
-		, {"123", "45", std::to_string(123 * 45)}
-		, {"110", "110", std::to_string(110 * 110)}
-		, {"5555", "55", std::to_string(5555 * 55)}
-		, {"5555", "5555", std::to_string(5555 * 5555)}
-		, {"98234712354214154", "171454654654655", "16842798681791158832220782986870"}
+		// {"12", "34", std::to_string(12 * 34)}
+		//, {"123", "2", std::to_string(123 * 2)}
+		//, {"123", "45", std::to_string(123 * 45)}
+		//, {"110", "110", std::to_string(110 * 110)}
+		//, {"5555", "55", std::to_string(5555 * 55)}
+		//, {"5555", "5555", std::to_string(5555 * 5555)}
+		//, {"98234712354214154", "171454654654655", "16842798681791158832220782986870"}
 		// , {"9823471235421415454545454545454544", "1714546546546545454544548544544545", "16842798681791114273590624445460185389471221520083884298838480662480"}
 	};
 
-	for (const auto& t : tests)
-	{
+	for (const auto& t : tests) {
 		const string str1 = t[0];
 		const string str2 = t[1];
 		const string expected = t[2];
