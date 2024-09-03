@@ -4,39 +4,62 @@
 
 using namespace std;
 
+//string Add(string str1, string str2) {
+//	if (!str1.size() && !str2.size()) return "0";
+//
+//	//int length = max(str1.size(), str2.size());
+//	//str1.insert(0, string(length - str1.size(), '0'));
+//
+//	str1.insert(0, string(max(str1.size(), str2.size()) - str1.size(), '0'));
+//	str2.insert(0, string(max(str1.size(), str2.size()) - str2.size(), '0'));
+//
+//	string result;
+//
+//	int carry = 0;
+//
+//	for (int i = str1.length(); i > 0; i--) {
+//		int sum = stoi(str1.substr(i - 1, 1)) + stoi(str2.substr(i - 1, 1)) + carry;
+//
+//		// cout << "str1 : " << stoi(str1.substr(i - 1, 1)) << endl;
+//		// cout << "str2 : " << stoi(str2.substr(i - 1, 1)) << endl;
+//
+//		// cout << "sum : " << sum << ", tmp : " << tmp << endl;
+//
+//		carry = sum / 10;
+//
+//		result.insert(0, to_string(sum % 10));
+//
+//		sum = 0;
+//	}
+//
+//	if (carry > 0) result.insert(0, to_string(carry));
+//
+//	return result;
+//}
+
 string Add(string str1, string str2) {
-	string temp;
-	if (str1.length() > str2.length()) {
-		temp = string(str1.length() - str2.length(), '0');
-		str2.insert(0, temp);
+	if (!str1.size() && !str2.size())
+		return "0";
+
+	int N = max(str1.size(), str2.size());
+	str1.insert(0, string(N - str1.size(), '0'));
+	str2.insert(0, string(N - str2.size(), '0'));
+
+	string result(N, '0');
+
+	int carry = 0;
+	for (int i = N - 1; i >= 0; i--) {
+		int n1 = str1[i] - '0';
+		int n2 = str2[i] - '0';
+
+		int sum = n1 + n2 + carry;
+		carry = sum / 10;
+
+		result[i] = char(sum % 10 + '0');
 	}
-	else if (str1.length() < str2.length()) {
-		temp = string(str2.length() - str1.length(), '0');
-		str1.insert(0, temp);
-	}
 
-	string result;
-
-	int tmp = 0;
-
-	for (int i = str1.length(); i > 0; i--) {
-		int sum = 0;
-
-		cout << "str1 : " << stoi(str1.substr(i - 1, i)) << endl;
-		sum += stoi(str1.substr(i - 1, i));
-		cout << "str2 : " << stoi(str2.substr(i - 1, i)) << endl;
-		sum += stoi(str2.substr(i - 1, i));
-		sum += tmp;
-
-		cout << "sum : " << sum << ", tmp : " << tmp << endl;
-
-		if (sum / 10) tmp = 1;
-		else tmp = 0;
-
-		result.insert(0, to_string(sum % 10));
-
-		sum = 0;
-	}
+	if (carry > 0)
+		result.insert(0, string(1, carry + '0'));
 
 	return result;
 }
@@ -45,10 +68,10 @@ int main() {
 	vector<vector<string>> tests = {
 		{"12", "34", to_string(12 + 34)}
 		, {"123", "45", to_string(123 + 45)}
-		//, {"54544", "44545", to_string(54544 + 44545)}
-		//, {"5555", "55", to_string(5555 + 55)}
-		//, {"5555", "5555", to_string(5555 + 5555)}
-		//, {"9823471235421415454545454545454544", "1714546546546545454544548544544545", "11538017781967960909090003089999089"}
+		, {"54544", "44545", to_string(54544 + 44545)}
+		, {"5555", "55", to_string(5555 + 55)}
+		, {"5555", "5555", to_string(5555 + 5555)}
+		, {"9823471235421415454545454545454544", "1714546546546545454544548544544545", "11538017781967960909090003089999089"}
 	};
 
 	for (const auto& t : tests) {

@@ -5,8 +5,7 @@
 using namespace std;
 
 // 항상 큰 수에서 작은 수를 빼는 경우(결과가 음수가 되지 않는 경우)를 가정
-string Subtract(string str1, string str2)
-{
+string Subtract(string str1, string str2) {
 	// 둘이 같을 경우 바로 "0" 반환
 	if (str1 == str2)
 		return "0"; // '0'은 char, "0"은 string
@@ -17,16 +16,51 @@ string Subtract(string str1, string str2)
 
 	string result(N, '0');
 
-	// TODO: 더하기와 거의 비슷합니다.
+	int carry = 0;
+
+	for (int i = N - 1; i >= 0; i--) {
+		// case #01
+		//int n1 = ((str1[i] - '0') + 10 - carry) % 10;
+		//int n2 = str2[i] - '0';
+		//cout << "n1 : " << n1 << ", n2 : " << n2 << endl;
+		//
+		//carry = 0;
+
+		//if (n1 < n2) {
+		//	result[i] = char((n1 + 10 - n2) + '0');
+		//	carry += 1;
+		//}
+		//else {
+		//	result[i] = char((n1 - n2) + '0');
+		//}
+
+		// case #02
+		int n1 = str1[i] - '0';
+		int n2 = str2[i] - '0';
+
+		int sum = n1 - n2 + carry + 10;
+		carry = sum / 10 - 1;
+		result[i] = char(sum % 10 + '0');
+	}
 
 	// 불필요한 '0' 제거 (예: "078" -> "78")
-	// TODO:
+	// case #01
+	//while (result.front() == '0') {
+	//	result = result.substr(1, N - 1);
+	//}
+
+	// case #02
+	int i = 0;
+	while (result[i] == '0') i++;
+	result = result.substr(i, N - i);
+
+	cout << "result : " << result << endl;
 
 	return result;
 }
 
-int main()
-{
+int main() {
+	
 	// 항상 큰 수에서 작은 수를 빼는 경우(결과가 음수가 되지 않는 경우)를 가정
 	vector<vector<string>> tests = {
 		{"34", "12", std::to_string(34 - 12)}
@@ -37,8 +71,7 @@ int main()
 		, {"9823471235421415454545454545454544", "1714546546546545454544548544544545", "8108924688874870000000906000909999"}
 	};
 
-	for (const auto& t : tests)
-	{
+	for (const auto& t : tests) {
 		const string str1 = t[0];
 		const string str2 = t[1];
 		const string expected = t[2];
