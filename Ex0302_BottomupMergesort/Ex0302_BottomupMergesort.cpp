@@ -5,8 +5,7 @@
 
 using namespace std;
 
-void Print(vector<int>& arr, int lo, int hi)
-{
+void Print(vector<int>& arr, int lo, int hi) {
 	// setfill(), setw()는 줄맞춤에 사용
 
 	for (int i = 0; i < lo; i++)
@@ -16,10 +15,8 @@ void Print(vector<int>& arr, int lo, int hi)
 	cout << endl;
 }
 
-bool CheckSorted(vector<int>& a)
-{
-	for (int i = 0; i < a.size() - 1; i++)
-	{
+bool CheckSorted(vector<int>& a) {
+	for (int i = 0; i < a.size() - 1; i++) {
 		if (a[i] > a[i + 1])
 			return false;
 	}
@@ -28,28 +25,43 @@ bool CheckSorted(vector<int>& a)
 }
 
 // Sedgewick p. 278
-class BottomupMerge
-{
+class BottomupMerge {
 public:
-	void Sort(vector<int>& a)
-	{
+	void Sort(vector<int>& a) {
 		aux.resize(a.size());
 
 		int N = a.size();
-		// TODO: 재귀호출 사용하지 않습니다.
+
+		for (int sz = 1; sz < N; sz = sz + sz)
+			for (int lo = 0; lo < N - sz; lo += sz + sz)
+				Merge(a, lo, lo + sz - 1, std::min(lo + sz + sz - 1, N - 1));
 	}
 
 private:
-	void Merge(vector<int>& a, int lo, int mid, int hi)
+	void Merge(vector<int>& a, int lo, int mid, int hi) // Towdown과 동일
 	{
-		// TODO: Top-down과 동일
+		cout << "Before: ";
+		Print(a, lo, hi);
+
+		int i = lo, j = mid + 1;
+		if (a[mid] <= a[j]) // 최선의 경우             return;
+			for (int k = lo; k <= hi; k++)
+				aux[k] = a[k];
+		for (int k = lo; k <= hi; k++) {
+			if (i > mid) a[k] = aux[j++];
+			else if (j > hi) a[k] = aux[i++];
+			else if (aux[j] < aux[i]) a[k] = aux[j++];
+			else a[k] = aux[i++];
+		}
+
+		cout << "After : ";
+		Print(a, lo, hi);
 	}
 
 	vector<int> aux; // 추가 메모리
 };
 
-int main()
-{
+int main() {
 	vector<int> my_vector(16);
 	std::iota(my_vector.begin(), my_vector.end(), 0);
 	std::reverse(my_vector.begin(), my_vector.end());

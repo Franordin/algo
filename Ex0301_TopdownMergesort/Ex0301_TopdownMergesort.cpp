@@ -5,8 +5,7 @@
 
 using namespace std;
 
-void Print(vector<int>& arr, int lo, int hi)
-{
+void Print(vector<int>& arr, int lo, int hi) {
 	// setfill(), setw()는 줄맞춤에 사용
 
 	for (int i = 0; i < lo; i++)
@@ -16,10 +15,8 @@ void Print(vector<int>& arr, int lo, int hi)
 	cout << endl;
 }
 
-bool CheckSorted(vector<int>& a)
-{
-	for (int i = 0; i < a.size() - 1; i++)
-	{
+bool CheckSorted(vector<int>& a) {
+	for (int i = 0; i < a.size() - 1; i++) {
 		if (a[i] > a[i + 1])
 			return false;
 	}
@@ -28,11 +25,9 @@ bool CheckSorted(vector<int>& a)
 }
 
 // Sedgewick p. 273
-class TopDownMerge
-{
+class TopDownMerge {
 public:
-	void Sort(vector<int>& a)
-	{
+	void Sort(vector<int>& a) {
 		count = 0; // 분석용
 		aux.resize(a.size());
 
@@ -40,22 +35,22 @@ public:
 	}
 
 private:
-	void Merge(vector<int>& a, int lo, int mid, int hi)
-	{
+	void Merge(vector<int>& a, int lo, int mid, int hi) {
 		cout << "Before: ";
 		Print(a, lo, hi);
 
 		int i = lo, j = mid + 1;
 
+		if (a[mid] <= a[j]) return;
+
 		for (int k = lo; k <= hi; k++)
 			aux[k] = a[k];
 
-		for (int k = lo; k <= hi; k++)
-		{
-			//if (i > mid) TODO;
-			//else if (j > hi) TODO;
-			//else if (aux[j] < aux[i]) TODO;
-			//else a[k] = TODO;
+		for (int k = lo; k <= hi; k++) {
+			if (i > mid) a[k] = aux[j++];
+			else if (j > hi) a[k] = aux[i++];
+			else if (aux[j] < aux[i]) a[k] = aux[j++];
+			else a[k] = aux[i++];
 		}
 
 		cout << "After : ";
@@ -65,14 +60,13 @@ private:
 		//cout << "Count : " << hi - lo + 1 << ", " << count << endl; // 누적 카운트 (디버깅용)
 	}
 
-	void SortHelper(vector<int>& a, int lo, int hi)
-	{
+	void SortHelper(vector<int>& a, int lo, int hi) {
 		if (hi <= lo) return;
 
 		int mid = lo + (hi - lo) / 2;
 
-		//TODO:
-		//TODO:
+		SortHelper(a, lo, mid);
+		SortHelper(a, mid + 1, hi);
 
 		Merge(a, lo, mid, hi);
 	}
@@ -81,8 +75,7 @@ private:
 	int count = 0;   // 연산 횟수 세보기용
 };
 
-int main()
-{
+int main() {
 	vector<int> my_vector(16);
 	std::iota(my_vector.begin(), my_vector.end(), 0);
 	std::reverse(my_vector.begin(), my_vector.end());
