@@ -9,14 +9,12 @@
 using namespace std;
 using namespace std::chrono;
 
-int SelectionBySorting(vector<int> arr, int k) // arr은 사본, 정답 확인용
-{
+int SelectionBySorting(vector<int> arr, int k) {
 	std::sort(arr.begin(), arr.end());
 	return arr[k - 1];
 }
 
-void Print(vector<int>& arr, int lo, int hi, string sep = "")
-{
+void Print(vector<int>& arr, int lo, int hi, string sep = "") {
 	//cout << "Index: ";
 	//for (int i = 0; i < arr.size(); i++)
 	//	cout << setfill(' ') << setw(3) << i;
@@ -24,7 +22,6 @@ void Print(vector<int>& arr, int lo, int hi, string sep = "")
 
 	cout << "Value: ";
 	for (int i = 0; i < arr.size(); i++) {
-
 		if (lo <= i && i <= hi)
 			cout << setfill(' ') << setw(3) << arr[i] << sep;
 		else
@@ -34,14 +31,11 @@ void Print(vector<int>& arr, int lo, int hi, string sep = "")
 }
 
 // CLRS p. 184
-int Partition(vector<int>& arr, int lo, int hi)
-{
+int Partition(vector<int>& arr, int lo, int hi) {
 	int x = arr[hi]; // 마지막 값을 피벗으로 사용
 	int i = lo - 1;
-	for (int j = lo; j < hi; j++)
-	{
-		if (arr[j] <= x)
-		{
+	for (int j = lo; j < hi; j++) {
+		if (arr[j] <= x) {
 			i += 1;
 			swap(arr[i], arr[j]);
 		}
@@ -60,8 +54,7 @@ int g_level = -1; // 경우에 따라 최대 몇 레벨까지 내려가는지 �
 // CLRS와 변수이름이 다릅니다.
 // CLRS는 1-based 인덱스입니다.
 // 매개변수 k는 1번째, 2번째, ..., k번째를 의미합니다. 0으로 시작하는 인덱스와 구분해야 합니다.
-int RandomizedSelect(vector<int>& arr, int lo, int hi, int k)
-{
+int RandomizedSelect(vector<int>& arr, int lo, int hi, int k) {
 	g_level++; // 확인용
 
 	cout << "level = " << g_level << ", n = " << hi - lo + 1 << ", lo = " << lo << ", hi = " << hi << ", k= " << k << endl;
@@ -76,19 +69,18 @@ int RandomizedSelect(vector<int>& arr, int lo, int hi, int k)
 
 	int index = Partition(arr, lo, hi); // pivot index
 
-	//if (index - lo == k - 1) TODO;
-	//else if (k - 1 < index - lo) TODO;
-	//else TODO;
+	if (index - lo == k - 1) return arr[index];
+	else if (k - 1 < index - lo) return RandomizedSelect(arr, lo, index - 1, k);
+	else return RandomizedSelect(arr, index + 1, hi, k - index + lo - 1);
 
 	return -1; // 임시구현
 }
 
-int main()
-{
-	srand(1); // 랜덤 피벗을 사용할 때는 숫자를 바꿔가면서 테스트해보세요.
+int main() {
+	srand(8); // 랜덤 피벗을 사용할 때는 숫자를 바꿔가면서 테스트해보세요.
 
 	//vector<int> my_vector = { 6, 19, 4, 12, 14, 9, 15, 7, 8, 11, 3, 13, 2, 5, 10 };
-	//vector<int> my_vector = { 4, 19, 4, 12, 2, 9, 15, 2, 8, 11, 3, 1, 2, 1, 10 };
+	// vector<int> my_vector = { 4, 19, 4, 12, 2, 9, 15, 2, 8, 11, 3, 1, 2, 1, 10 };
 	vector<int> my_vector = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
 
 	Print(my_vector, 0, my_vector.size() - 1);
@@ -102,8 +94,7 @@ int main()
 	random_device rd;
 	mt19937 gen(rd());
 
-	for (int n = 1; n <= 10000; n += 1)
-	{
+	for (int n = 1; n <= 10000; n += 1) {
 		vector<int> my_vector(n);
 
 		uniform_int_distribution<int> value_distribution(0, (n - 1) / 2);
@@ -121,8 +112,7 @@ int main()
 		// Print(my_vector, 0, my_vector.size() - 1);
 		// cout << expected_value << " " << selected_value << endl;
 
-		if (expected_value != selected_value)
-		{
+		if (expected_value != selected_value) {
 			cout << "Incorrect. " << expected_value << " " << selected_value << endl;
 			Print(backup, 0, backup.size() - 1);
 			Print(my_vector, 0, backup.size() - 1);
@@ -132,3 +122,4 @@ int main()
 
 	cout << "Good!" << endl;
 }
+

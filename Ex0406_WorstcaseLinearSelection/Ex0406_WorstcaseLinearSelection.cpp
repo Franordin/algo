@@ -8,8 +8,7 @@
 #include <iomanip>
 using namespace std;
 
-void Print(vector<int>& arr, int lo, int hi, string sep = "")
-{
+void Print(vector<int>& arr, int lo, int hi, string sep = "") {
 	cout << "Index: ";
 	for (int i = 0; i < arr.size(); i++)
 		cout << setfill(' ') << setw(3) << i;
@@ -17,7 +16,6 @@ void Print(vector<int>& arr, int lo, int hi, string sep = "")
 
 	cout << "Value: ";
 	for (int i = 0; i < arr.size(); i++) {
-
 		if (lo <= i && i <= hi)
 			cout << setfill(' ') << setw(3) << arr[i] << sep;
 		else
@@ -27,10 +25,8 @@ void Print(vector<int>& arr, int lo, int hi, string sep = "")
 }
 
 // 그룹 단위로 출력 (그룹 단위 정렬 확인용)
-void PrintGroups(vector<int>& arr, int lo, int g)
-{
-	for (int j = lo; j <= lo + g - 1; j++)
-	{
+void PrintGroups(vector<int>& arr, int lo, int g) {
+	for (int j = lo; j <= lo + g - 1; j++) {
 		cout << "Group " << j - lo + 1 << " : ";
 		for (int l = 0; l < 5; l++)
 			cout << arr[j + l * g] << " ";
@@ -38,13 +34,11 @@ void PrintGroups(vector<int>& arr, int lo, int g)
 	}
 }
 
-int Partition(vector<int>& arr, int lo, int hi)
-{
+int Partition(vector<int>& arr, int lo, int hi) {
 	int x = arr[hi];
 	int i = lo - 1;
 	for (int j = lo; j < hi; j++)
-		if (arr[j] <= x)
-		{
+		if (arr[j] <= x) {
 			i += 1;
 			swap(arr[i], arr[j]);
 		}
@@ -53,8 +47,7 @@ int Partition(vector<int>& arr, int lo, int hi)
 }
 
 // 선택정렬의 안쪽루프, stride 확인해보세요.
-void SelectionSortPass(vector<int>& arr, int lo, int hi, int stride = 1)
-{
+void SelectionSortPass(vector<int>& arr, int lo, int hi, int stride = 1) {
 	int min_index = lo;
 	for (int j = lo + stride; j <= hi; j += stride)
 		if (arr[j] < arr[min_index])
@@ -63,21 +56,18 @@ void SelectionSortPass(vector<int>& arr, int lo, int hi, int stride = 1)
 }
 
 // 구현 편의상 Select()가 값과 인덱스를 같이 반환
-struct Pair
-{
+struct Pair {
 	int index;
 	int value;
 };
 
 // CLRS 9.3
-Pair Select(vector<int>& arr, int lo, int hi, int k)
-{
+Pair Select(vector<int>& arr, int lo, int hi, int k) {
 	cout << "n = " << hi - lo + 1 << ", lo = " << lo << ", hi = " << hi << ", k = " << k << endl;
 	Print(arr, lo, hi);
 
 	// 5로 나눠서 떨어지지 않는 경우에는 정렬해서 범위를 줄이기
-	while ((hi - lo + 1) % 5 != 0)
-	{
+	while ((hi - lo + 1) % 5 != 0) {
 		SelectionSortPass(arr, lo, hi);
 		if (k == 1) return { lo, arr[lo] };
 		lo += 1;
@@ -89,18 +79,22 @@ Pair Select(vector<int>& arr, int lo, int hi, int k)
 	// 그룹단위 정렬 전 출력
 	PrintGroups(arr, lo, g);
 
-	//TODO: 각각의 그룹 정렬(힌트: stride 사용)
+	// 각각의 그룹 정렬(힌트: stride 사용)
+	for (int j = lo; j < hi; j++) {
+		SelectionSortPass(arr, j, hi, g);
+	}
 
 	// 그룹단위 정렬 후 출력
 	PrintGroups(arr, lo, g);
 
 	// 가운데 몰려있는 그룹별 중간값들에 대해 재귀 호출
-	// Pair x = TODO
+	Pair x = Select(arr, lo + 2 * g, lo + 3 * g - 1, std::ceil(g / 2.0));
+	cout << "std::ceil(g / 2.0) = " << std::ceil(g / 2.0) << endl;
 
-	// cout << "lo = " << lo << ", hi = " << hi << ", Median of medians = " << x.value << endl;
+	cout << "lo = " << lo << ", hi = " << hi << ", Median of medians = " << x.value << endl;
 
 	// 중간값들의 중간값을 피벗으로 사용
-	// swap(arr[x.index], arr[hi]);
+	swap(arr[x.index], arr[hi]);
 
 	int index = Partition(arr, lo, hi);
 
@@ -109,20 +103,17 @@ Pair Select(vector<int>& arr, int lo, int hi, int k)
 	else return Select(arr, index + 1, hi, k - index + lo - 1);
 }
 
-int SelectionBySorting(vector<int> arr, int k) // arr은 사본
-{
+int SelectionBySorting(vector<int> arr, int k) {
 	std::sort(arr.begin(), arr.end());
 	return arr[k - 1];
 }
 
-struct Sample
-{
+struct Sample {
 	int n;
 	double duration;
 };
 
-int main()
-{
+int main() {
 	//vector<int> my_vector = { 11,  7, 14,  6, 20,  4,  0, 10, 23,  5,  8, 17,  9, 21, 12, 22, 19, 15,  3, 13, 18,  1,  2, 16 };
 	vector<int> my_vector(25);
 	std::iota(my_vector.begin(), my_vector.end(), 0); // iota는 0, 1, 2, ... , n-1 까지 순서대로 채워주는 함수
