@@ -46,11 +46,15 @@ int RandomizedPartition(vector<int>& arr, int lo, int hi) {
 void RandomizedQuicksort(vector<int>& arr, int lo, int hi) {
 	Print(arr, lo, hi);
 
-	RandomizedPartition(arr, lo, hi);
+	if (lo < hi) {
+		int mid = RandomizedPartition(arr, lo, hi);
+		RandomizedQuicksort(arr, lo, mid - 1);
+		RandomizedQuicksort(arr, mid + 1, hi);
+	}
 }
 
 int main() {
-	srand(2);
+	srand(11);
 
 	vector<int> arr = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
 
