@@ -381,8 +381,7 @@ public:
 	}
 };
 
-int main()
-{
+int main() {
 	// SEARCHXMPL 순서로 추가
 	{
 		RedBlackBST bst;

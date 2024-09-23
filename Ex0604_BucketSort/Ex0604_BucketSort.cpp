@@ -8,15 +8,13 @@
 #include <iomanip>
 using namespace std;
 
-void Print(vector<float>& arr)
-{
+void Print(vector<float>& arr) {
 	for (auto& a : arr)
 		cout << a << " ";
 	cout << endl;
 }
 
-void PrintBuckets(vector<vector<float>>& buckets)
-{
+void PrintBuckets(vector<vector<float>>& buckets) {
 	for (int i = 0; i < buckets.size(); i++)
 	{
 		cout << i << ": ";
@@ -27,8 +25,7 @@ void PrintBuckets(vector<vector<float>>& buckets)
 }
 
 // 다른 정렬을 사용해도 됩니다.
-void InsertionSort(vector<float>& bucket)
-{
+void InsertionSort(vector<float>& bucket) {
 	for (int i = 1; i < bucket.size(); ++i) {
 		float key = bucket[i];
 		int j = i - 1;
@@ -40,25 +37,40 @@ void InsertionSort(vector<float>& bucket)
 	}
 }
 
-void BucketSort(vector<float>& arr, int num_buckets)
-{
+void BucketSort(vector<float>& arr, int num_buckets) {
 	vector<vector<float>> buckets(num_buckets);
 
-	// TODO:
+	for (auto& a : arr) buckets[a * 10].push_back(a);
 
 	cout << "Before sorting" << endl;
 	PrintBuckets(buckets);
 
-	// TODO:
+	for (auto& b : buckets) {
+		InsertionSort(b);
+	}
 
 	cout << "After sorting" << endl;
 	PrintBuckets(buckets);
 
-	// TODO:
+	//int pos = 0;
+	//for (int i = 0; i < buckets.size(); i++) {
+	//	while (!buckets[i].empty()) {
+	//		arr[pos] = buckets[i].front();
+	//		buckets[i].erase(buckets[i].begin());
+	//		pos++;
+	//	}
+	//}
+
+	int i = 0;
+	for (auto& b : buckets) {
+		if (b.size() > 0) {
+			memcpy(&arr[i], &b[0], sizeof(b[0]) * b.size());
+			i += int(b.size());
+		}
+	}
 }
 
-int main()
-{
+int main() {
 	vector<float> arr = { 0.78f, 0.17f, 0.39f, 0.26f, 0.72f, 0.94f, 0.21f, 0.12f, 0.23f, 0.67f };
 
 	Print(arr);
