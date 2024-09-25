@@ -1,27 +1,25 @@
-﻿#include <iostream>
-#include <vector>
-#include <random>
-#include <limits>
+﻿#include <chrono>
 #include <fstream>
-#include <chrono>
-#include <numeric>
 #include <iomanip>
+#include <iostream>
+#include <limits>
 #include <list>
+#include <numeric>
+#include <random>
+#include <vector>
+
 using namespace std;
 
 // Sedgewick Ch3.1 p.375
 template<typename T_KEY, typename T_VALUE>
-class SequentialSearch
-{
+class SequentialSearch {
 public:
-	struct Node
-	{
+	struct Node {
 		T_KEY key;
 		T_VALUE value;
 	};
 
-	Node* Find(T_KEY key)
-	{
+	Node* Find(T_KEY key) {
 		// TODO: 찾았을 경우 주소 반환
 
 		// 못 찾았을 경우 nullptr 반환
@@ -30,30 +28,30 @@ public:
 
 		// cout << key << " was not found." << endl;
 
+		for (auto& n : list) {
+			if (n.key == key)
+				return &n;
+		}
+
 		return nullptr;
 	}
 
-	void Insert(Node n)
-	{
-		// TODO: 키를 찾아봤는데 없으면 추가
-
-		// 이미 있을 경우에는 추가 X
+	void Insert(Node n) {
+		if (!Find(n.key))
+			list.push_back(n);
 	}
 
-	void Reset()
-	{
+	void Reset() {
 		list.clear();
 	}
 
-	void Print()
-	{
+	void Print() {
 		for (auto& n : list)
 			cout << "(" << n.key << ", " << n.value << ")->";
 		cout << endl;
 	}
 
-	int Size()
-	{
+	int Size() {
 		return int(list.size());
 	}
 
@@ -62,39 +60,30 @@ private:
 };
 
 template<typename T_KEY, typename T_VALUE>
-class SeparateChaining
-{
+class SeparateChaining {
 public:
 	typedef typename SequentialSearch<T_KEY, T_VALUE>::Node Node;
 
-	SeparateChaining(int c)
-	{
+	SeparateChaining(int c) {
 		st.resize(c);
 		Reset();
 	}
 
-	Node* Find(T_KEY k)
-	{
-		// TODO:
-
-		return nullptr;
+	Node* Find(T_KEY k) {
+		return st[HashFunc(k)].Find(k);
 	}
 
-	void Insert(Node n)
-	{
-		// TODO:
+	void Insert(Node n) {
+		st[HashFunc(n.key)].Insert(n);
 	}
 
-	void Reset()
-	{
+	void Reset() {
 		for (auto& s : st)
 			s.Reset();
 	}
 
-	void Print()
-	{
-		for (int i = 0; i < st.size(); i++)
-		{
+	void Print() {
+		for (int i = 0; i < st.size(); i++) {
 			cout << i << ": ";
 			st[i].Print();
 		}
@@ -103,20 +92,18 @@ public:
 private:
 	vector<SequentialSearch<T_KEY, T_VALUE>> st;
 
-	int HashFunc(int key)
-	{
+	int HashFunc(int key) {
 		return key % st.size(); // 가장 간단한 해시 함수 사용
 	}
 
 	// int Hash(string key){ /* string을 hash값으로 변환 */ }
 };
 
-int main()
-{
+int main() {
 	// 난수 생성기
 	random_device rd;
 	mt19937 g(rd());
-	uniform_int_distribution<int>  dist(1, 365);
+	uniform_int_distribution<int> dist(1, 365);
 
 	// 모인 인원 수
 	int num_people = 23;
@@ -125,45 +112,41 @@ int main()
 	SeparateChaining<int, int> map(23); // 버킷 수를 늘리면 충돌 감소
 
 	// 한 번만 테스트
-	{
-		int samebirthday_count = 0;
+	//{
+	//	int samebirthday_count = 0;
 
-		for (int i = 0; i < num_people; i++)
-		{
-			int birthday = dist(g);
+	//	for (int i = 0; i < num_people; i++) {
+	//		int birthday = dist(g);
 
-			auto* n = map.Find(birthday);
+	//		auto* n = map.Find(birthday);
 
-			if (n) // 이미 키(key)가 존재할 경우
-			{
-				samebirthday_count += 1;
-				n->value += 1;
-			}
-			else
-				map.Insert({ birthday, 1 }); // {생일, 이 날이 생일인 사람의 숫자}
-		}
+	//		if (n) { // 이미 키(key)가 존재할 경우
+	//			samebirthday_count += 1;
+	//			n->value += 1;
+	//		}
+	//		else
+	//			map.Insert({ birthday, 1 }); // {생일, 이 날이 생일인 사람의 숫자}
+	//	}
 
-		map.Print();
+	//	map.Print();
 
-		cout << samebirthday_count << endl;
-	}
+	//	cout << samebirthday_count << endl;
+	//}
 
 	// 아래는 반복 테스트
+
 	int num_try = 10000;
 	int all_samebirthday_count = 0;
 
-	for (int t = 0; t < num_try; t++)
-	{
+	for (int t = 0; t < num_try; t++) {
 		int samebirthday_count = 0;
 
-		for (int i = 0; i < num_people; i++)
-		{
+		for (int i = 0; i < num_people; i++) {
 			int birthday = dist(g);
 
 			auto* n = map.Find(birthday);
 
-			if (n) // 이미 키(key)가 존재할 경우
-			{
+			if (n) { // 이미 키(key)가 존재할 경우
 				samebirthday_count += 1;
 				n->value += 1;
 			}

@@ -9,13 +9,12 @@
 #include <list>
 #include <map> // map
 #include <unordered_map> // unordered_map 
+
 using namespace std;
 
 template<typename T_KEY, typename T_VALUE>
-void Print(const unordered_map<T_KEY, T_VALUE>& map)
-{
-	for (int i = 0; i < map.bucket_count(); i++) // 버킷에 대해 반복
-	{
+void Print(const unordered_map<T_KEY, T_VALUE>& map) {
+	for (int i = 0; i < map.bucket_count(); i++) { // 버킷에 대해 반복
 		auto b = map.bucket(i);
 		cout << i << ": ";
 		for (auto i = map.begin(b); i != map.end(b); i++) // 버킷에 저장된 것들 출력
@@ -24,8 +23,7 @@ void Print(const unordered_map<T_KEY, T_VALUE>& map)
 	}
 }
 
-int main()
-{
+int main() {
 	// 기본적인 사용 방법
 	{
 		//unordered_map<string, int> map;
@@ -63,12 +61,10 @@ int main()
 	int num_try = 1000;
 	int all_samebirthday_count = 0;
 
-	for (int t = 0; t < num_try; t++)
-	{
+	for (int t = 0; t < num_try; t++) {
 		int samebirthday_count = 0;
 
-		for (int i = 0; i < num_people; i++)
-		{
+		for (int i = 0; i < num_people; i++) {
 			int birthday = dist(g);
 
 			// TODO:
