@@ -6,8 +6,7 @@ using namespace std;
 // LeetCode: Roman to Integer
 // https://leetcode.com/problems/roman-to-integer/description/
 
-int RomanToInt(string s)
-{
+int RomanToInt(string s) {
 	unordered_map<char, int> m;
 
 	m['I'] = 1;
@@ -20,9 +19,21 @@ int RomanToInt(string s)
 
 	int ans = 0;
 
-	for (int i = 0; i < s.length(); i++)
-	{
-		// TODO:
+	//for (int i = 0; i < s.length(); i++) {
+	//	if (m[s[i]] < m[s[i + 1]]) {
+	//		i++;
+	//		ans += m[s[i]] - m[s[i - 1]];
+	//	}
+	//	else
+	//		ans += m[s[i]];
+	//}
+
+	for (int i = 0; i < s.length(); i++) {
+		if (i < s.length() - 1 && m[s[i]] < m[s[i + 1]]) {
+			ans -= m[s[i]];
+		}
+		else
+			ans += m[s[i]];
 	}
 
 	cout << s << " = " << ans << endl;
@@ -30,30 +41,29 @@ int RomanToInt(string s)
 	return ans;
 }
 
-int main()
-{
+int main() {
 	RomanToInt("II");
-
+	
 	RomanToInt("III");
-
+	
 	RomanToInt("XII");
-
+	
 	RomanToInt("XXVII");
-
+	
 	RomanToInt("IV");
-
+	
 	RomanToInt("IX");
-
+	
 	RomanToInt("XL");
-
+	
 	RomanToInt("XC");
-
+	
 	RomanToInt("CD");
-
+	
 	RomanToInt("CM");
-
+	
 	RomanToInt("LVIII");
-
+	
 	RomanToInt("MCMXCIV");
 
 	return 0;

@@ -41,7 +41,7 @@ int main() {
 		map.find("Kiwi")->second += 1; // 이터레이터 사용
 		map["Kiwi"] += 1; // 인덱싱(더 편리)
 
-		cout << map.count("Apple") << endl; // 1 아니면 0 반환 (중복허용X)
+		// cout << map.count("Apple") << endl; // 1 아니면 0 반환 (중복허용X)
 
 		// map은 내부적으로 정렬된 순서 유지 (unordered_map과 출력 순서가 다를 수 있음)
 		for (auto i : map)
@@ -51,7 +51,7 @@ int main() {
 	// 난수 생성기
 	random_device rd;
 	mt19937 g(rd());
-	uniform_int_distribution<int>  dist(1, 365);
+	uniform_int_distribution<int> dist(1, 365);
 
 	// 모인 인원 수
 	int num_people = 23;
@@ -64,10 +64,27 @@ int main() {
 	for (int t = 0; t < num_try; t++) {
 		int samebirthday_count = 0;
 
+		//for (int i = 0; i < num_people; i++) {
+		//	int birthday = dist(g);
+
+		//	if (map.count(birthday) > 0) {
+		//		map[birthday]++;
+		//		samebirthday_count++;
+		//	}
+		//	else map.insert({ birthday, 1 });
+		//}
+
+		// using iterator
 		for (int i = 0; i < num_people; i++) {
 			int birthday = dist(g);
 
-			// TODO:
+			auto n = map.find(birthday);
+			if (n != map.end()) {
+				n->second++;
+				samebirthday_count++;
+			}
+			else
+				map.insert({ birthday, 1 });
 		}
 
 		if (samebirthday_count > 0)
