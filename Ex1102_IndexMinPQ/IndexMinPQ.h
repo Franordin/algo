@@ -9,11 +9,9 @@
 // https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/IndexMinPQ.java.html
 
 template<typename Key>
-class IndexMinPQ
-{
+class IndexMinPQ {
 public:
-	IndexMinPQ(int cap)
-	{
+	IndexMinPQ(int cap) {
 		capacity = cap;
 		size = 0;
 		keys.resize(capacity + 1);
@@ -21,21 +19,18 @@ public:
 		qp.resize(capacity + 1, -1); // -1로 초기화(아직 추가되지 않았다는 의미)
 	}
 
-	bool Empty()
-	{
+	bool Empty() {
 		return size == 0;
 	}
 
-	bool Contains(int i)
-	{
+	bool Contains(int i) {
 		assert(i >= 0 && i < capacity);
 		return qp[i] != -1;
 	}
 
 	int Size() { return size; }
 
-	void Insert(int i, Key key)
-	{
+	void Insert(int i, Key key) {
 		assert(i >= 0 && i < capacity);
 		assert(!Contains(i));
 
@@ -48,19 +43,14 @@ public:
 		// 정점의 개수가 고정되어 있다고 가정하면 resize 구현 불필요
 	}
 
-	int MinIndex()
-	{
-		return pq[1]; // 1번 인덱스 자리
-	}
+	int MinIndex() { return pq[1]; } // 1번 인덱스 자리
 
-	Key MinKey()
-	{
+	Key MinKey() {
 		assert(size > 0);
 		return keys[pq[1]];
 	}
 
-	int DelMin()
-	{
+	int DelMin() {
 		assert(size != 0);
 
 		int m = pq[1];
@@ -76,16 +66,14 @@ public:
 		return m;
 	}
 
-	Key keyOf(int i)
-	{
+	Key keyOf(int i) {
 		assert(i >= 0 && i < capacity);
 		assert(Contains(i));
 
 		return keys[i];
 	}
 
-	void ChangeKey(int i, Key key)
-	{
+	void ChangeKey(int i, Key key) {
 		assert(i >= 0 && i < capacity);
 		assert(Contains(i));
 
@@ -94,8 +82,7 @@ public:
 		Sink(qp[i]);
 	}
 
-	void DecreaseKey(int i, Key key)
-	{
+	void DecreaseKey(int i, Key key) {
 		assert(i >= 0 && i < capacity);
 		assert(Contains(i));
 		assert(key < keys[i]); // 새로운 키가 더 작아야 함
@@ -104,8 +91,7 @@ public:
 		Swim(qp[i]);
 	}
 
-	void IncreaseKey(int i, Key key)
-	{
+	void IncreaseKey(int i, Key key) {
 		assert(i >= 0 && i < capacity);
 		assert(Contains(i));
 		assert(key > keys[i]); // 새로운 키가 더 작아야 함
@@ -114,8 +100,7 @@ public:
 		Sink(qp[i]);
 	}
 
-	void Delete(int i)
-	{
+	void Delete(int i) {
 		assert(i >= 0 && i < capacity);
 		assert(Contains(i));
 
@@ -127,8 +112,7 @@ public:
 		qp[i] = -1; // 삭제됐다는 의미
 	}
 
-	void Exch(int i, int j)
-	{
+	void Exch(int i, int j) {
 		int swap = pq[i];
 		pq[i] = pq[j];
 		pq[j] = swap;
@@ -136,25 +120,36 @@ public:
 		qp[pq[j]] = j;
 	}
 
-	bool Greater(int i, int j)
-	{
+	bool Greater(int i, int j) {
 		return keys[pq[i]] > keys[pq[j]];
 	}
 
-	void Swim(int k)
-	{
-		// TODO: 우선순위가 높은 것을 수영해서 수면위로 올라가듯 위로 올리는 과정
-		// 힌트: Greater(), Exch() 사용
+	void Swim(int k) {
+		while (k > 1 && Greater(k / 2, k)) { // 부모 노드와 비교
+			std::cout << "Current node (k): " << k << ", Parent node: " << k / 2 << std::endl;
+
+			// 노드의 위치를 바꿈
+			std::cout << "Exchanging " << k << " with " << k / 2 << std::endl;
+			Exch(k, k / 2); // 자리를 바꿈
+
+			k = k / 2; // k를 부모 노드로 업데이트
+			std::cout << "Moved to parent node: " << k << std::endl;
+			Print();
+		}
+		std::cout << "Final position of k: " << k << std::endl;
 	}
 
-	void Sink(int k)
-	{
-		// TODO: 우선순위가 낮은 것을 밑으로 가라앉히는 과정
-		// 힌트: Greater(), Exch() 사용
+	void Sink(int k) {
+		while (2 * k <= size) {
+			int j = 2 * k;
+			if (j < size && Greater(j, j + 1)) j++;
+			if (!Greater(k, j)) break;
+			Exch(k, j);
+			k = j;
+		}
 	}
 
-	void Print()
-	{
+	void Print() {
 		using namespace std;
 		cout << "Index: ";
 		for (int i = 1; i <= size; i++)
@@ -179,4 +174,3 @@ private:
 	std::vector<int> qp; // qp[pq[i]] = pq[qp[i]] = i
 	std::vector<Key> keys; // keys[i]가 index i의 우선순위
 };
-
