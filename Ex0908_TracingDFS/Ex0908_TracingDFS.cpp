@@ -52,8 +52,10 @@ public:
 
 		source->visited = true;
 		for (auto* w : source->out_neighbors)
-			if (!w->visited)
+			if (!w->visited) {
 				DFS(w, level + 1);
+				cout << "call " << source->value << ", " << w->value << endl;
+			}
 
 		current_time++;
 		cout << setw(2) << current_time << ": ";
@@ -67,15 +69,13 @@ private:
 };
 
 int main() {
-
-	//// simple case
+	// simple case
 	//{
 	//	// 0: Appetizer
 	//	// 1: Main dish
 	//	// 2: Dessert
-	//
 	//	Graph g(3);
-	//
+
 	//	g.AddDiEdge(0, 1); // Appetizer → Main dish
 	//	g.AddDiEdge(1, 2); // Main dish → Dessert
 	//	g.AddDiEdge(0, 2); // Appetizer → Dessert
@@ -88,11 +88,11 @@ int main() {
 		Graph g(6);
 
 		g.AddDiEdge(0, 2);
+		g.AddDiEdge(1, 5);
 		g.AddDiEdge(2, 1);
 		g.AddDiEdge(2, 3);
-		g.AddDiEdge(3, 4);
-		g.AddDiEdge(1, 5);
 		g.AddDiEdge(2, 4);
+		g.AddDiEdge(3, 4);
 		g.AddBiEdge(3, 5);
 
 		g.DFS(2);

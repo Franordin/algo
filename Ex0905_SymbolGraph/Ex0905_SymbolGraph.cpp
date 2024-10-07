@@ -4,10 +4,8 @@
 #include <unordered_map>
 using namespace std;
 
-struct Vertex
-{
-	Vertex(string k, int i)
-	{
+struct Vertex {
+	Vertex(string k, int i) {
 		key = k;
 		index = i;
 	}
@@ -19,55 +17,56 @@ struct Vertex
 	vector<Vertex*> out_neighbors;
 };
 
-class SymbolGraph
-{
+class SymbolGraph {
 public:
-	SymbolGraph(vector<string> keys)
-	{
+	SymbolGraph(vector<string> keys) {
 		table.clear();
 		vertices.clear();
 		vertices.reserve(keys.size());
 
 		// TODO: vertices와 table 초기화
+		for (auto k : keys) {
+			vertices.push_back(new Vertex(k, table.size()));
+			table[k] = vertices.size() - 1;
+		}
 
 		// 확인용
+		cout << "[ vertices ]" << endl;
 		for (auto v : vertices)
 			cout << v->key << " " << v->index << endl;
+		cout << endl;
+		
+		cout << "[  table  ]" << endl;
 		for (auto i : table)
 			cout << i.first << " " << i.second << endl;
+		cout << endl;
 	}
 
-	~SymbolGraph()
-	{
+	~SymbolGraph() {
 		for (auto* v : vertices)
 			delete v;
 	}
 
-	void AddDiEdge(string kv, string kw)
-	{
-		// TODO: table 이용
+	void AddDiEdge(string kv, string kw) {
+		AddDiEdge(table[kv], table[kw]);
 	}
 
-	void AddDiEdge(int v, int w) // 단방향 간선
-	{
+	void AddDiEdge(int v, int w) { // 단방향 간선
 		vertices[v]->out_neighbors.push_back(vertices[w]);
 	}
 
-	void DFS(string k)
-	{
-		// TODO: table 이용
+	void DFS(string k) {
+		DFS(table[k]);
 	}
 
-	void DFS(int source)
-	{
+	void DFS(int source) {
 		for (auto* v : this->vertices)
 			v->visited = false;
 		DFS(vertices[source]);
 		cout << endl;
 	}
 
-	void DFS(Vertex* source)
-	{
+	void DFS(Vertex* source) {
 		source->visited = true;
 
 		// Preorder
@@ -87,16 +86,15 @@ private:
 	unordered_map<string, int> table; // key -> index
 };
 
-int main()
-{
+int main() {
 	SymbolGraph g({ "A", "B", "C", "D", "E", "F", "G", "H", "I" });
 
-	g.AddDiEdge("F", "B");
-	g.AddDiEdge("F", "G");
 	g.AddDiEdge("B", "A");
 	g.AddDiEdge("B", "D");
 	g.AddDiEdge("D", "C");
 	g.AddDiEdge("D", "E");
+	g.AddDiEdge("F", "B");
+	g.AddDiEdge("F", "G");
 	g.AddDiEdge("G", "I");
 	g.AddDiEdge("I", "H");
 
@@ -104,4 +102,3 @@ int main()
 
 	return 0;
 }
-

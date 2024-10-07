@@ -6,8 +6,7 @@
 #include <map>
 using namespace std;
 
-struct Vertex
-{
+struct Vertex {
 	Vertex(int v) { value = v; }
 
 	int value = -1;
@@ -18,30 +17,25 @@ struct Vertex
 	vector<Vertex*> in_neighbors; // Transpose 쉽게 하려고 저장
 };
 
-class Graph
-{
+class Graph {
 public:
-	Graph(int num_vertices)
-	{
+	Graph(int num_vertices) {
 		vertices.resize(num_vertices);
 		for (int i = 0; i < num_vertices; i++)
 			vertices[i] = new Vertex(i);
 	}
 
-	~Graph()
-	{
+	~Graph() {
 		for (auto* v : vertices)
 			delete v;
 	}
 
-	void AddDiEdge(int v, int w)
-	{
+	void AddDiEdge(int v, int w) {
 		vertices[v]->out_neighbors.push_back(vertices[w]);
 		vertices[w]->in_neighbors.push_back(vertices[v]);
 	}
 
-	deque<Vertex*> ReversePostorderDFS()
-	{
+	deque<Vertex*> ReversePostorderDFS() {
 		revpost = deque<Vertex*>();
 
 		for (auto* v : this->vertices)
@@ -54,40 +48,50 @@ public:
 		return revpost;
 	}
 
-	void Transpose()
-	{
-		// TODO:
+	void Transpose() {
+		for (auto* v : vertices) {
+			swap(v->in_neighbors, v->out_neighbors);
+		}
 
 		// 인접 행렬 표현에서 행렬을 transpose 시키는 것과 동일
 	}
 
-	void KosarajuStrongComponents()
-	{
+	void KosarajuStrongComponents() {
 		Transpose(); // 생략하면 출력 순서는 달라지만 결과는 동일
 
-		// deque<Vertex*> revpost = TODO; // 아래 for문 편의상 stack대신 deque 사용
+		deque<Vertex*> revpost = ReversePostorderDFS(); // 아래 for문 편의상 stack대신 deque 사용
 
 		cout << "Reverse Post-order: ";
-		//for (auto* v : revpost)
-		//	cout << v->value << " ";
-		//cout << endl;
+		for (auto* v : revpost)
+			cout << v->value << " ";
+		cout << endl;
 
 		Transpose();
 
-		// TODO:
+		for (auto* v : this->vertices)
+			v->visited = false;
+
+		id.resize(vertices.size(), -1);
+		count = 0;
+
+		for (auto* v : revpost) {
+			if (id[v->value] < 0) {
+				DFS(v);
+				count++;
+			}
+		}
 
 		// 결과 정리 후 출력
-		//vector<vector<int>> components(count);
-		//for (int s = 0; s < vertices.size(); s++)
-		//	components[id[s]].push_back(s);
-		//cout << count << " strong components" << endl;
-		//for (int i = 0; i < components.size(); i++)
-		//{
-		//	cout << "Kosaraju strong component " << i + 1 << ": ";
-		//	for (auto v : components[i])
-		//		cout << v << " ";
-		//	cout << endl;
-		//}
+		vector<vector<int>> components(count);
+		for (int s = 0; s < vertices.size(); s++)
+			components[id[s]].push_back(s);
+		cout << count << " strong components" << endl;
+		for (int i = 0; i < components.size(); i++) {
+			cout << "Kosaraju strong component " << i + 1 << ": ";
+			for (auto v : components[i])
+				cout << v << " ";
+			cout << endl;
+		}
 	}
 
 private:
@@ -97,22 +101,27 @@ private:
 	int count = 0;
 
 	// 	void TopologicalSortHelper(Vertex* v)
-	void ReversePostorderDFS(Vertex* v)
-	{
-		// TODO:
+	void ReversePostorderDFS(Vertex* v)	{
+		v->visited = true;
+		for (auto* w : v->out_neighbors)
+			if (!w->visited)
+				ReversePostorderDFS(w);
+		revpost.push_front(v);
 	}
 
-	void DFS(Vertex* v)
-	{
-		// TODO:
+	void DFS(Vertex* v)	{
+		v->visited = true;
+		id[v->value] = count;
+		for (auto* w : v->out_neighbors)
+			if (!w->visited)
+				DFS(w);
 	}
 
 	// ReversePostorderDFS()도 깊이우선탐색이라서 DSF()와 합칠 수 있으나
 	// 여기서는 디버깅 편의를 위해 분리하였습니다.
 };
 
-int main()
-{
+int main() {
 	// Sedgewick p569
 	// 방향(directed) 그래프
 	vector<vector<int>> edges = {

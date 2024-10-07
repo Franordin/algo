@@ -7,10 +7,8 @@
 #include <assert.h>
 using namespace std;
 
-struct Vertex
-{
-	Vertex(int v)
-	{
+struct Vertex {
+	Vertex(int v) {
 		value = v;
 	}
 
@@ -31,42 +29,34 @@ struct Vertex
 	// 여기서는 아래에 별도의 vector<int> indegree(vertices.size());를 사용합니다.
 };
 
-class Graph
-{
+class Graph {
 public:
-	Graph(int num_vertices)
-	{
+	Graph(int num_vertices) {
 		vertices.resize(num_vertices);
 		for (int i = 0; i < num_vertices; i++)
 			vertices[i] = new Vertex(i);
 	}
 
-	~Graph()
-	{
+	~Graph() {
 		for (auto* v : vertices)
 			delete v;
 	}
 
-	void AddDiEdge(int v, int w)
-	{
+	void AddDiEdge(int v, int w) {
 		vertices[v]->out_neighbors.push_back(vertices[w]);
 		vertices[w]->in_neighbors.push_back(vertices[v]); // 선행 정점 방문 확인용
 	}
 
-	void PrecedenceCheck(stack<Vertex*> my_stack) // my_stack의 사본
-	{
+	void PrecedenceCheck(stack<Vertex*> my_stack) { // my_stack의 사본
 		for (auto* v : this->vertices)
 			v->visited = false;
 
-		while (!my_stack.empty())
-		{
+		while (!my_stack.empty()) {
 			Vertex* v = my_stack.top();
 			cout << "Precedence check " << v->value << " : ";
-			for (auto* w : v->in_neighbors)
-			{
+			for (auto* w : v->in_neighbors) {
 				// 선수조건을 만족했는지 확인
-				if (!w->visited)
-				{
+				if (!w->visited) {
 					cout << "Wrong" << endl;
 					exit(-1);
 				}
@@ -81,19 +71,41 @@ public:
 		cout << "OK" << endl;
 	}
 
-	stack<Vertex*> QueueBasedTopologicalSort()
-	{
+	stack<Vertex*> QueueBasedTopologicalSort() {
 		vector<int> indegree(vertices.size()); // indegree를 Vertex에 저장할 수도 있습니다.
-		// TODO:
+		
+		for (auto* v : vertices)
+			for (auto* w : v->out_neighbors)
+				indegree[w->value]++;
 
 		queue<Vertex*> q;
 
 		// indegree가 0인 vertex들을 q에 넣기
-		// TODO:
+		for (auto* v : vertices) {
+			assert(indegree[v->value] == vertices[v->value]->in_neighbors.size());
+
+			if (indegree[v->value] == 0)
+				q.push(v);
+		}
 
 		vector<Vertex*> result;
 
-		// TODO:
+		while (!q.empty()) {
+			Vertex* v = q.front();
+			q.pop();
+
+			// indegree가 0인 것들을 먼저 방문
+			result.push_back(v);
+
+			// 방문한 정점의 이웃들의 indegree를 하나씩 줄여준다
+			for (auto* w : v->out_neighbors) {
+				indegree[w->value]--;
+
+				// 줄인 후에 indegree가 0이면 queue에 넣기
+				if (indegree[w->value] == 0)
+					q.push(w);
+			}
+		}
 
 		// 뒤에서 DFS 방식 예제와의 호환성을 위해 역순으로 stack에 저장
 		stack<Vertex*> s;
@@ -102,64 +114,62 @@ public:
 
 		return s;
 	}
+
 private:
 	vector<Vertex*> vertices;
-};
+};	
 
-int main()
-{
+int main() {
 	// 간단한 경우
-	{
-		// 0: 애피타이저
-		// 1: 메인요리
-		// 2: 디저트
+	//{
+	//	// 0: 애피타이저
+	//	// 1: 메인요리
+	//	// 2: 디저트
 
-		Graph g(3);
-		g.AddDiEdge(0, 1); // 애피타이저 -> 메인요리
-		g.AddDiEdge(1, 2); // 메인요리 -> 디저트
-		g.AddDiEdge(0, 2); // 애피타이저 -> 디저트
+	//	Graph g(3);
+	//	g.AddDiEdge(0, 1); // 애피타이저 -> 메인요리
+	//	g.AddDiEdge(1, 2); // 메인요리 -> 디저트
+	//	g.AddDiEdge(0, 2); // 애피타이저 -> 디저트
 
-		// 디저트->애피타이저 X, 싸이클이 생기기 때문
+	//	// 디저트->애피타이저 X, 싸이클이 생기기 때문
 
-		auto my_stack = g.QueueBasedTopologicalSort();
+	//	auto my_stack = g.QueueBasedTopologicalSort();
 
-		g.PrecedenceCheck(my_stack);
+	//	g.PrecedenceCheck(my_stack);
 
-		// 결과 출력
-		while (!my_stack.empty())
-		{
-			cout << my_stack.top()->value;
-			my_stack.pop();
-			if (!my_stack.empty())
-				cout << " -> ";
-		}
-		cout << endl;
-	}
+	//	// 결과 출력
+	//	while (!my_stack.empty()) {
+	//		cout << my_stack.top()->value;
+	//		my_stack.pop();
+	//		if (!my_stack.empty())
+	//			cout << " -> ";
+	//	}
+	//	cout << endl;
+	//}
 
 	// 조금 더 복잡한 경우
-	{
-		Graph g(6);
+	//{
+	//	Graph g(6);
 
-		g.AddDiEdge(5, 2);
-		g.AddDiEdge(5, 0);
-		g.AddDiEdge(0, 2);
-		g.AddDiEdge(4, 0);
-		g.AddDiEdge(4, 1);
-		g.AddDiEdge(2, 3);
-		g.AddDiEdge(3, 1);
+	//	g.AddDiEdge(5, 2);
+	//	g.AddDiEdge(5, 0);
+	//	g.AddDiEdge(0, 2);
+	//	g.AddDiEdge(4, 0);
+	//	g.AddDiEdge(4, 1);
+	//	g.AddDiEdge(2, 3);
+	//	g.AddDiEdge(3, 1);
 
-		auto my_stack = g.QueueBasedTopologicalSort();
-		g.PrecedenceCheck(my_stack);
+	//	auto my_stack = g.QueueBasedTopologicalSort();
+	//	g.PrecedenceCheck(my_stack);
 
-		while (!my_stack.empty())
-		{
-			cout << my_stack.top()->value;
-			my_stack.pop();
-			if (!my_stack.empty())
-				cout << " -> ";
-		}
-		cout << endl;
-	}
+	//	while (!my_stack.empty()) {
+	//		cout << my_stack.top()->value;
+	//		my_stack.pop();
+	//		if (!my_stack.empty())
+	//			cout << " -> ";
+	//	}
+	//	cout << endl;
+	//}
 
 	{
 		// Sedgewick Ch4.2 p.582 jobs.txt 예제
@@ -189,12 +199,10 @@ int main()
 
 		Graph g(int(keys.size()));
 
-		for (auto& l : jobs)
-		{
+		for (auto& l : jobs) {
 			int v = keys[l[0]];
 			cout << v << " : ";
-			for (int i = 1; i < l.size(); i++)
-			{
+			for (int i = 1; i < l.size(); i++) {
 				g.AddDiEdge(v, keys[l[i]]);
 
 				cout << keys[l[i]] << ", ";
@@ -205,8 +213,7 @@ int main()
 		auto my_stack = g.QueueBasedTopologicalSort();
 		g.PrecedenceCheck(my_stack);
 
-		while (!my_stack.empty())
-		{
+		while (!my_stack.empty()) {
 			cout << values[my_stack.top()->value] << " " << my_stack.top()->value << endl;
 			my_stack.pop();
 		}

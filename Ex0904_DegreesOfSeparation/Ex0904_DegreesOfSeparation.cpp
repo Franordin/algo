@@ -56,29 +56,31 @@ public:
 			Vertex* v = q.front();
 			q.pop();
 
-			if (v == vertices[sink])
+			if (v == vertices[sink]) {
 				break;
+			}
 
 			for (Vertex* w : v->out_neighbors) {
 				if (!w->visited) {
 					w->visited = true;
 					q.push(w);
-
 					prev[w->value] = v;
 				}
 			}
 		}
 
 		deque<Vertex*> path;
+		if (prev[sink])
+			path.push_front(vertices[sink]);
+		else
+			cout << "No path found" << endl;
 
-		// TODO: prev를 이용해서 path 만들기
-		//       deque의 push_front() 사용
-		while (!q.empty()) {
-
+		Vertex* p = prev[sink];
+		while (p != nullptr) {
+			path.push_front(p);
+			p = prev[p->value];
 		}
 
-
-		// 결과 출력 (숫자만)
 		for (auto* v : path) {
 			cout << v->value;
 			if (v != path.back())
@@ -106,20 +108,20 @@ vector<string> split(const std::string& str, char delim) {
 
 int main() {
 	// 간단한 경우
-	{
-		// 0: 애피타이저
-		// 1: 메인요리
-		// 2: 디저트
+	//{
+	//	// 0: 애피타이저
+	//	// 1: 메인요리
+	//	// 2: 디저트
 
-		Graph g(3);
-		g.AddDiEdge(0, 1); // 애피타이저 -> 메인요리
-		g.AddDiEdge(1, 2); // 메인요리 -> 디저트
-		g.AddDiEdge(0, 2); // 애피타이저 -> 디저트
+	//	Graph g(3);
+	//	g.AddDiEdge(0, 1); // 애피타이저 -> 메인요리
+	//	g.AddDiEdge(1, 2); // 메인요리 -> 디저트
+	//	g.AddDiEdge(0, 2); // 애피타이저 -> 디저트
 
-		// 디저트->애피타이저 X, 싸이클이 생기기 때문
+	//	// 디저트->애피타이저 X, 싸이클이 생기기 때문
 
-		g.BreadthFirstPaths(0, 2);
-	}
+	//	g.BreadthFirstPaths(0, 2);
+	//}
 
 	// 조금 더 복잡한 경우
 	//{
@@ -173,53 +175,53 @@ int main() {
 	//		cout << values[v->value] << " " << v->value << endl;
 	//}
 
-	//{
-	//	// movies.txt 파일 출처
-	//	// http://algs4.cs.princeton.edu
-	//	// http://algs4.cs.princeton.edu/code/algs4-data.zip
+	{
+		// movies.txt 파일 출처
+		// http://algs4.cs.princeton.edu
+		// http://algs4.cs.princeton.edu/code/algs4-data.zip
 
-	//	vector<vector<string>> jobs;
+		vector<vector<string>> jobs;
 
-	//	cout << "Read file" << endl;
-	//	string line;
-	//	ifstream f("movies.txt");
-	//	if (f.is_open()) {
-	//		while (std::getline(f, line)) {
-	//			vector<string> words = split(line, '/');
-	//			jobs.push_back(words);
-	//		}
-	//	}
-	//	else {
-	//		cout << "File not opened" << endl;
-	//	}
+		cout << "Read file" << endl;
+		string line;
+		ifstream f("movies.txt");
+		if (f.is_open()) {
+			while (std::getline(f, line)) {
+				vector<string> words = split(line, '/');
+				jobs.push_back(words);
+			}
+		}
+		else {
+			cout << "File not opened" << endl;
+		}
 
-	//	vector<string> values; // int -> string
-	//	map<string, int> map;  // string -> int
-	//	for (auto& l : jobs)
-	//		for (auto& s : l)
-	//			if (map.count(s) == 0) {
-	//				map[s] = int(values.size());
-	//				values.push_back(s);
-	//				// cout << map[s] << " " << s << endl;
-	//			}
+		vector<string> values; // int -> string
+		map<string, int> map;  // string -> int
+		for (auto& l : jobs)
+			for (auto& s : l)
+				if (map.count(s) == 0) {
+					map[s] = int(values.size());
+					values.push_back(s);
+					// cout << map[s] << " " << s << endl;
+				}
 
-	//	Graph g(int(map.size()));
+		Graph g(int(map.size()));
 
-	//	for (auto& l : jobs) {
-	//		int v = map[l[0]];
-	//		for (int i = 1; i < l.size(); i++) {
-	//			g.AddBiEdge(v, map[l[i]]); // Bi-directional edge
+		for (auto& l : jobs) {
+			int v = map[l[0]];
+			for (int i = 1; i < l.size(); i++) {
+				g.AddBiEdge(v, map[l[i]]); // Bi-directional edge
 
-	//			//cout << map[l[i]] << ", ";
-	//		}
-	//	}
+				//cout << map[l[i]] << ", ";
+			}
+		}
 
-	//	deque<Vertex*> result = g.BreadthFirstPaths(map["Bacon, Kevin"], map["Kidman, Nicole"]);
-	//	//deque<Vertex*> result = g.BreadthFirstPaths(map["Bacon, Kevin"], map["Grant, Cary"]);
+		deque<Vertex*> result = g.BreadthFirstPaths(map["Bacon, Kevin"], map["Kidman, Nicole"]);
+		//deque<Vertex*> result = g.BreadthFirstPaths(map["Bacon, Kevin"], map["Grant, Cary"]);
 
-	//	for (auto* v : result)
-	//		cout << values[v->value] << " " << v->value << endl;
-	//}
+		for (auto* v : result)
+			cout << values[v->value] << " " << v->value << endl;
+	}
 
 	return 0;
 }

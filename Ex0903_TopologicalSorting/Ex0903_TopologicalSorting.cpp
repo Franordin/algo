@@ -42,19 +42,15 @@ public:
 		vertices[w]->in_neighbors.push_back(vertices[v]);
 	}
 
-	void PrecedenceCheck(stack<Vertex*> my_stack) // my_stack의 사본
-	{
+	void PrecedenceCheck(stack<Vertex*> my_stack) { // my_stack의 사본
 		for (auto* v : this->vertices)
 			v->visited = false;
 
-		while (!my_stack.empty())
-		{
+		while (!my_stack.empty()) {
 			Vertex* v = my_stack.top();
 			cout << "Precedence check " << v->value << " : ";
-			for (auto* w : v->in_neighbors)
-			{
-				if (!w->visited)
-				{
+			for (auto* w : v->in_neighbors) {
+				if (!w->visited) {
 					cout << "Wrong" << endl;
 					exit(-1);
 				}
@@ -88,7 +84,7 @@ private:
 	vector<Vertex*> vertices;
 
 	void TopologicalSortHelper(Vertex* v) {
-		cout << "pre push : " << v->value << endl;
+		//cout << "pre push : " << v->value << endl;
 		
 		pre.push(v);
 
@@ -129,13 +125,22 @@ int main() {
 	{
 		Graph g(6);
 
-		g.AddDiEdge(0, 2);
+		//g.AddDiEdge(4, 0);
+		//g.AddDiEdge(4, 1);
+		//g.AddDiEdge(5, 0);
+		//g.AddDiEdge(5, 2);
+		//g.AddDiEdge(0, 2);
+		//g.AddDiEdge(2, 3);
+		//g.AddDiEdge(3, 1);
+		//g.AddDiEdge(2, 1);
+
+		g.AddDiEdge(4, 1);
+		g.AddDiEdge(4, 5);
+		g.AddDiEdge(5, 2);
 		g.AddDiEdge(2, 3);
 		g.AddDiEdge(3, 1);
-		g.AddDiEdge(4, 0);
-		g.AddDiEdge(4, 1);
-		g.AddDiEdge(5, 0);
-		g.AddDiEdge(5, 2);
+		g.AddDiEdge(2, 1);
+		g.AddDiEdge(3, 0);
 
 		auto my_stack = g.TopologicalSort();
 		g.PrecedenceCheck(my_stack);
