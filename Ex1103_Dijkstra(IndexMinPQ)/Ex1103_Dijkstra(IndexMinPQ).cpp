@@ -9,15 +9,13 @@ using namespace std;
 
 // 간선을 저장하는 구조 사용 (문제에 따라 적절한 자료구조 사용)
 // Sedgewick p. 642
-class DirectedEdge
-{
+class DirectedEdge {
 public:
 	int v;         // 간선 시작(edge tail, 화살표 꼬리) 정점의 인덱스
 	int w;         // 간선 끝(edge head, 화살촉) 정점의 인덱스
 	double weight; // edge weight
 
-	DirectedEdge(int v, int w, double weight)
-	{
+	DirectedEdge(int v, int w, double weight) {
 		this->v = v;
 		this->w = w;
 		this->weight = weight;
@@ -29,22 +27,19 @@ public:
 };
 
 // 간선에 가중치가 있는 방향성 그래프
-class EdgeWeightedDigraph
-{
+class EdgeWeightedDigraph {
 public:
 	int num_vertices;
 	int num_edges;
 	vector<vector<DirectedEdge>> adj; // 여기서는 Edge를 기록하는 자료구조
 
-	EdgeWeightedDigraph(int num_vertices)
-	{
+	EdgeWeightedDigraph(int num_vertices) {
 		this->num_vertices = num_vertices;
 		this->num_edges = 0;
 		adj.resize(this->num_vertices);
 	}
 
-	void AddEdge(DirectedEdge e)
-	{
+	void AddEdge(DirectedEdge e) {
 		adj[e.From()].push_back(e);
 		num_edges += 1;
 	}
@@ -54,8 +49,7 @@ public:
 
 // 최단거리 찾기만을 수행하는 클래스
 // 그래프 자체는 다른 클래스 사용
-class DijkstraShortestPaths
-{
+class DijkstraShortestPaths {
 public:
 	DijkstraShortestPaths(EdgeWeightedDigraph& g, int s)
 		:
@@ -70,8 +64,7 @@ public:
 		PrintIndex(dist);
 		PrintDist(dist);
 
-		while (!pq.Empty())
-		{
+		while (!pq.Empty()) {
 			Relax(g, pq.DelMin());
 		}
 
@@ -82,8 +75,7 @@ public:
 	// 정답을 한 번에 찾는 방식이 아니라 반복(iteration)하면서 
 	// 제약 조건을 조금씩 완화시켜간다는 표현입니다.
 
-	void Relax(EdgeWeightedDigraph& g, int v)
-	{
+	void Relax(EdgeWeightedDigraph& g, int v) {
 		cout << v << endl;
 
 		// 인접 edge들 중에서 가장 가까운 것을 이용해서 업데이트
@@ -109,24 +101,21 @@ public:
 		PrintDist(dist);
 	}
 
-	void PrintIndex(vector<double>& dist)
-	{
+	void PrintIndex(vector<double>& dist) {
 		cout << "Vertex: ";
 		for (int i = 0; i < dist.size(); i++)
 			cout << setw(6) << i;
 		cout << endl;
 	}
 
-	void PrintDist(vector<double>& dist)
-	{
+	void PrintDist(vector<double>& dist) {
 		cout << "Dist  : ";
 		for (int i = 0; i < dist.size(); i++)
 			cout << setw(6) << dist[i];
 		cout << endl;
 	}
 
-	void PrintPaths()
-	{
+	void PrintPaths() {
 		// TODO: prev 이용
 	}
 
@@ -137,8 +126,7 @@ private:
 	IndexMinPQ<double> pq;
 };
 
-int main()
-{
+int main() {
 	// CLRS p.621
 	{
 		vector<DirectedEdge> edges = {
