@@ -31,7 +31,7 @@ class EdgeWeightedDigraph {
 public:
 	int num_vertices;
 	int num_edges;
-	vector<vector<DirectedEdge>> adj; // 여기서는 Edge를 기록하는 자료구조
+	vector<vector<DirectedEdge>> adj; // 여기서는 Edge를 기록하는 자료구조 | adjacency list
 
 	EdgeWeightedDigraph(int num_vertices) {
 		this->num_vertices = num_vertices;
@@ -51,8 +51,7 @@ public:
 // 그래프 자체는 다른 클래스 사용
 class DijkstraShortestPaths {
 public:
-	DijkstraShortestPaths(EdgeWeightedDigraph& g, int s)
-		:
+	DijkstraShortestPaths(EdgeWeightedDigraph& g, int s) :
 		prev(g.num_vertices, -1),
 		dist(g.num_vertices, numeric_limits<double>::infinity()), // 일단 전부 무한대 거리로 초기화
 		pq(g.num_vertices)
@@ -79,25 +78,25 @@ public:
 		cout << v << endl;
 
 		// 인접 edge들 중에서 가장 가까운 것을 이용해서 업데이트
-/*
-		for ( TODO )
-		{
+		for (DirectedEdge& e : g.Adj(v)) {
 			// dist[v]: s에서 v까지 오기 위해 현재까지 발견된 최소거리 경로
 			// v에서 다시 w로 이동할 경우 dist 업데이트
 
-			int w = TODO;
+			int w = e.To();
 
-			double new_dist = TODO;
-			if ( TODO ) // w까지 오는 새로운 최단 경로 발견
-			{
-				dist[w] = TODO;
+			cout << "dist[" << w << "] : " << dist[w] << ", e.Weight() : " << e.Weight() << endl;
+			double new_dist = dist[w] + e.Weight();
+			cout << "new_dist : " << new_dist << endl;
+			//if (new_dist < dist[w]) // w까지 오는 새로운 최단 경로 발견
+			//{
+			//	dist[w] = TODO;
 
-				prev[w] = TODO; // 최단 경로 기록
+			//	prev[w] = TODO; // 최단 경로 기록
 
-				//TODO: pq 사용
-			}
+			//	//TODO: pq 사용
+			//}
 		}
-*/
+
 		PrintDist(dist);
 	}
 
