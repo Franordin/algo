@@ -1,67 +1,63 @@
-﻿#include <iostream>
-#include <vector>
+﻿#include <iomanip>
+#include <limits>
 #include <list>
 #include <queue>
-#include <limits>
-#include <iomanip>
+#include <vector>
+#include <iostream>
 using namespace std;
 
-void Print(vector<double>& dist)
-{
+void Print(vector<double>& dist) {
 	for (int i = 0; i < dist.size(); i++)
 		cout << setw(6) << dist[i];
 	cout << endl;
 }
 
-void PrintPathHelper(vector<int>& prev, int j)
-{
-	// TODO:
+void PrintPathHelper(vector<int>& prev, int j) {
+	if (j == -1) return;
+	PrintPathHelper(prev, prev[j]);
+	cout << j << " ";
 }
 
-void PrintPaths(vector<int>& prev)
-{
-	for (int j = 0; j < prev.size(); j++)
-	{
+void PrintPaths(vector<int>& prev) {
+	for (int j = 0; j < prev.size(); j++) {
 		PrintPathHelper(prev, j);
 		cout << endl;
 	}
 }
 
-struct Edge
-{
+struct Edge {
 	int v, w;
 	double weight;
 };
 
-int main()
-{
+int main() {
 	constexpr double kInf = numeric_limits<double>::infinity();
 
 	// CLRS p.621 (다익스트라 예제와 같음)
-	//vector<Edge> edges = {
-	//{0, 1, 10.0},
-	//{0, 3, 5.0},
-	//{1, 2, 1.0},
-	//{1, 3, 2.0},
-	//{2, 4, 4.0},
-	//{3, 1, 3.0},
-	//{3, 2, 9.0},
-	//{3, 4, 2.0},
-	//{4, 0, 7.0},
-	//{4, 2, 6.0},
-	//};
-	//int V = 5; // number of vertices
-
-	// 간선이 왼쪽에서 오른쪽 방향일 경우
 	vector<Edge> edges = {
-	{0, 1, 1.0}, // A->B 1
-	{1, 2, 5.0},
-	{1, 3, 4.0},
-	{2, 3, -3.0},
-	{3, 4, 1.0},
-	{4, 3, -100.0} // 음의 싸이클이 추가된 경우
+	{0, 1, 10.0},
+	{0, 3, 5.0},
+	{1, 2, 1.0},
+	{1, 3, 2.0},
+	{2, 4, 4.0},
+	{3, 1, 3.0},
+	{3, 2, 9.0},
+	{3, 4, 2.0},
+	{4, 0, 7.0},
+	{4, 2, 6.0},
 	};
 	int V = 5; // number of vertices
+
+	// 간선이 왼쪽에서 오른쪽 방향일 경우
+	//vector<Edge> edges = {
+	//{0, 1, 1.0}, // A->B 1
+	//{1, 2, 5.0},
+	//{1, 3, 4.0},
+	//{2, 3, -3.0},
+	//{3, 4, 1.0},
+	//{4, 3, -100.0} // 음의 싸이클이 추가된 경우
+	//};
+	//int V = 5; // number of vertices
 
 	//std::reverse(edges.begin(), edges.end()); // 간선 순서 뒤집어서 해보기
 
@@ -90,11 +86,12 @@ int main()
 
 	Print(dist);
 
-	for (int v = 1; v < V; v++)
-	{
-		for (auto e : edges)
-		{
-			// TODO:
+	for (int v = 1; v < V; v++) {
+		for (auto e : edges) {
+			if (dist[e.w] > dist[e.v] + e.weight) {
+				dist[e.w] = dist[e.v] + e.weight;
+				prev[e.w] = e.v;
+			}
 		}
 
 		Print(dist);
@@ -106,18 +103,14 @@ int main()
 	// cout << bool(numeric_limits<double>::infinity() + 100 == numeric_limits<double>::infinity()) << endl; // 1 true
 	// https://en.wikipedia.org/wiki/IEEE_754 부동소수점 표준에 따르면 수학적 정의와 동일하게 무한대 더하기 무한대는 무한대입니다. 
 
-	for (auto e : edges)
-	{
-		// if ( TODO )
-		{
+	for (auto e : edges) {
+		if (dist[e.w] > dist[e.v] + e.weight) {
 			cout << "Negative cycle was found." << endl;
 			return -1;
 		}
 	}
 
 	cout << "Negative cycle was not found." << endl;
-
 	PrintPaths(prev);
-
 	return 0;
 }

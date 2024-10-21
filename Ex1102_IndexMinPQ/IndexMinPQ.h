@@ -126,17 +126,11 @@ public:
 
 	void Swim(int k) {
 		while (k > 1 && Greater(k / 2, k)) { // 부모 노드와 비교
-			std::cout << "Current node (k): " << k << ", Parent node: " << k / 2 << std::endl;
-
 			// 노드의 위치를 바꿈
-			std::cout << "Exchanging " << k << " with " << k / 2 << std::endl;
 			Exch(k, k / 2); // 자리를 바꿈
 
 			k = k / 2; // k를 부모 노드로 업데이트
-			std::cout << "Moved to parent node: " << k << std::endl;
-			Print();
 		}
-		std::cout << "Final position of k: " << k << std::endl;
 	}
 
 	void Sink(int k) {

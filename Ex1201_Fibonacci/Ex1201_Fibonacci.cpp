@@ -3,8 +3,7 @@
 #include <iomanip>
 using namespace std;
 
-int RecurFibonacci(int n)
-{
+int RecurFibonacci(int n) {
 	cout << "RecurFibonacci(" << setw(2) << n << ")" << endl;
 
 	if (n == 0) return 0;
@@ -14,26 +13,26 @@ int RecurFibonacci(int n)
 }
 
 // 메모에 vector 대신에 unordered_map을 사용하는 경우도 있습니다.
-int MemoizedTopDownFibonacciHelper(int n, std::vector<int>& memo)
-{
-	// TODO:
+int MemoizedTopDownFibonacciHelper(int n, std::vector<int>& memo){
+	if (memo[n] != -1)
+		return memo[n];
+
+	memo[n] = MemoizedTopDownFibonacciHelper(n - 2, memo) + MemoizedTopDownFibonacciHelper(n - 1, memo);
 
 	for (auto& t : memo) cout << setw(4) << t; cout << endl;
 
 	return memo[n];
 }
 
-int MemoizedTopDownFibonacci(int n)
-{
-	vector<int> memo(n + 1, -1); // -1로 초기화
+int MemoizedTopDownFibonacci(int n) {
+	vector<int> memo(n + 1, -1); // init with -1
 	memo[0] = 0;
 	memo[1] = 1;
 
 	return MemoizedTopDownFibonacciHelper(n, memo);
 }
 
-int BottomUpFibonacciTabulation(int n)
-{
+int BottomUpFibonacciTabulation(int n) {
 	if (n == 0) return 0;
 	if (n == 1) return 1;
 
@@ -41,9 +40,8 @@ int BottomUpFibonacciTabulation(int n)
 	table[0] = 0;
 	table[1] = 1;
 
-	// for ( TODO )
-	{
-		// TODO:
+	for (int i = 2; i <= n; i++) {
+		table[i] = table[i - 2] + table[i - 1];
 
 		for (auto& t : table) cout << setw(4) << t; cout << endl;
 	}
@@ -52,25 +50,31 @@ int BottomUpFibonacciTabulation(int n)
 }
 
 // 재미로 배열 없이 구현해보기
-int BottomUpFibonacci(int n)
-{
+int BottomUpFibonacci(int n) {
 	if (n == 0 || n == 1)
 		return n;
 
 	int a = 0;
 	int b = 1;
 
-	// TODO:
+	int tmp;
+
+	for (int i = 1; i < n; i++) {
+		tmp = b;
+		b = a + b;
+		cout << b << " ";
+		a = tmp;
+	}
+	cout << endl;
 
 	return b; // The N-th Fibonacci number
 }
 
-int main()
-{
+int main() {
 	int n = 7; // 숫자가 크면 단순 재귀 버전은 많이 느립니다.
 
 	cout << RecurFibonacci(n) << endl;
-
+	
 	cout << MemoizedTopDownFibonacci(n) << endl;
 
 	cout << BottomUpFibonacciTabulation(n) << endl;
@@ -79,5 +83,3 @@ int main()
 
 	return 0;
 }
-
-

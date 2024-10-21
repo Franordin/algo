@@ -4,6 +4,7 @@
 #include <limits>
 #include <queue>
 #include <iomanip>
+#include <string>
 
 using namespace std;
 
@@ -92,9 +93,14 @@ public:
 	// 정답을 한 번에 찾는 방식이 아니라 반복(iteration)하면서 
 	// 제약 조건을 조금씩 완화시켜간다는 표현입니다.
 	void Relax(EdgeWeightedDigraph& g, int v) {
-		cout << v << endl;
-
-		//TODO: 
+		for (DirectedEdge& e : g.Adj(v)) {
+			int w = e.To();
+			double new_dist = dist[v] + e.Weight();
+			if (dist[w] > new_dist) {
+				dist[w] = new_dist;
+				prev[w] = e.From();
+			}
+		}
 
 		PrintDist(dist);
 	}
@@ -114,7 +120,22 @@ public:
 	}
 
 	void PrintPaths() {
-		// TODO: prev 이용
+		for (int i = 0; i < prev.size(); i++) {
+			deque<int> path;
+			path.push_front(i);
+			int v = prev[i];
+			while (v != -1) {
+				path.push_front(v);
+				v = prev[v];
+			}
+
+			for (auto v : path) {
+				cout << v;
+				if (v != path.back())
+					cout << " -> ";
+			}
+			cout << endl;
+		}
 	}
 
 private:

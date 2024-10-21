@@ -6,8 +6,7 @@
 using namespace std;
 
 // X에서 첫 m글자, Y에서 첫 n글자에 대해 LCS를 찾는 함수
-string RecurLCS(const string& X, const string& Y, int m, int n)
-{
+string RecurLCS(const string& X, const string& Y, int m, int n) {
 	if (m == 0 || n == 0)
 		return string("");
 
@@ -28,8 +27,7 @@ string RecurLCS(const string& X, const string& Y, int m, int n)
 	return string(""); // TODO: 불필요, 삭제
 }
 
-int RecurLengthLCS(const string& X, const string& Y, int m, int n)
-{
+int RecurLengthLCS(const string& X, const string& Y, int m, int n) {
 	if (m == 0 || n == 0)
 		return 0;
 
@@ -43,28 +41,23 @@ int RecurLengthLCS(const string& X, const string& Y, int m, int n)
 	return 0; // TODO: 불필요, 삭제
 }
 
-void PrintLCS(const vector<vector<char>>& prev, const string& X, int i, int j)
-{
+void PrintLCS(const vector<vector<char>>& prev, const string& X, int i, int j) {
 	if (i == 0 || j == 0)
 		return;
 
-	if (prev[i][j] == '\\')
-	{
+	if (prev[i][j] == '\\') {
 		PrintLCS(prev, X, i - 1, j - 1);
 		cout << X[i - 1]; // 주의: -1
 	}
-	else if (prev[i][j] == '|')
-	{
+	else if (prev[i][j] == '|') {
 		PrintLCS(prev, X, i - 1, j);
 	}
-	else
-	{
+	else {
 		PrintLCS(prev, X, i, j - 1);
 	}
 }
 
-int BottomUpLCS(const string& X, const string& Y, int m, int n)
-{
+int BottomUpLCS(const string& X, const string& Y, int m, int n) {
 	// 주의: 문자열과 table의 인덱싱에 일관성이 없어서 헷갈릴 수 있습니다.
 	//       table은 1-base 인덱싱, X와 Y는 0-base 인덱싱
 	//       table[i][j]: X의 길이가 i이고 Y의 길이가 j인 경우를 의미
@@ -79,10 +72,8 @@ int BottomUpLCS(const string& X, const string& Y, int m, int n)
 	// prev에는 강의 노트의 화살표를 문자로 저장, PrintLCS() 참고
 
 	// 여기서 i, j는 X와 Y의 길이를 의미 (1-base)
-	for (int i = 1; i <= m; i++)
-	{
-		for (int j = 1; j <= n; j++)
-		{
+	for (int i = 1; i <= m; i++) {
+		for (int j = 1; j <= n; j++) {
 			/*
 			if (X[i - 1] == Y[j - 1]) // 주의: i - 1, j - 1
 			{
@@ -112,8 +103,7 @@ int BottomUpLCS(const string& X, const string& Y, int m, int n)
 	// 이하 표(tabulation) 확인용
 
 	cout << table[m][n] << endl;
-	for (int i = 1; i <= m; i++)
-	{
+	for (int i = 1; i <= m; i++) {
 		for (int j = 1; j <= n; j++)
 			cout << left << setw(3) << table[i][j];
 		cout << endl;
@@ -121,8 +111,7 @@ int BottomUpLCS(const string& X, const string& Y, int m, int n)
 	cout << endl;
 
 	cout << lcs[m][n] << endl;
-	for (int i = 1; i <= m; i++)
-	{
+	for (int i = 1; i <= m; i++) {
 		for (int j = 1; j <= n; j++)
 			cout << setw(min(X.length(), Y.length())) << lcs[i][j];
 		cout << endl;
@@ -132,8 +121,7 @@ int BottomUpLCS(const string& X, const string& Y, int m, int n)
 	PrintLCS(prev, X, m, n);
 	cout << endl;
 
-	for (int i = 1; i <= m; i++)
-	{
+	for (int i = 1; i <= m; i++) {
 		for (int j = 1; j <= n; j++)
 			cout << setw(3) << prev[i][j];
 		cout << endl;
@@ -143,8 +131,7 @@ int BottomUpLCS(const string& X, const string& Y, int m, int n)
 	return table[m][n]; // 결과
 }
 
-int main()
-{
+int main() {
 	// CLRS 4th p.398 Fig 14.8 그림의 예제
 	string X = "ABCBDAB";
 	string Y = "BDCABA";
@@ -163,13 +150,13 @@ int main()
 	cout << RecurLCS(X, Y, int(X.size()), int(Y.size())) << endl;
 	cout << endl;
 
-	cout << "RecurLengthLCS()" << endl;
-	cout << RecurLengthLCS(X, Y, int(X.size()), int(Y.size())) << endl;
-	cout << endl;
+	//cout << "RecurLengthLCS()" << endl;
+	//cout << RecurLengthLCS(X, Y, int(X.size()), int(Y.size())) << endl;
+	//cout << endl;
 
-	cout << "BottomUpLCS()" << endl;
-	cout << BottomUpLCS(X, Y, int(X.size()), int(Y.size())) << endl;
-	cout << endl;
+	//cout << "BottomUpLCS()" << endl;
+	//cout << BottomUpLCS(X, Y, int(X.size()), int(Y.size())) << endl;
+	//cout << endl;
 
 	return 0;
 }

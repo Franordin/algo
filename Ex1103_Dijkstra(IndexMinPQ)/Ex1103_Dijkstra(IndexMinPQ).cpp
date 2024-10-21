@@ -84,17 +84,15 @@ public:
 
 			int w = e.To();
 
-			cout << "dist[" << w << "] : " << dist[w] << ", e.Weight() : " << e.Weight() << endl;
-			double new_dist = dist[w] + e.Weight();
-			cout << "new_dist : " << new_dist << endl;
-			//if (new_dist < dist[w]) // w까지 오는 새로운 최단 경로 발견
-			//{
-			//	dist[w] = TODO;
+			double new_dist = dist[v] + e.Weight();
+			if (dist[w] > new_dist) { // w까지 오는 새로운 최단 경로 발견
+				dist[w] = new_dist;
 
-			//	prev[w] = TODO; // 최단 경로 기록
+				prev[w] = e.From(); // 최단 경로 기록
 
-			//	//TODO: pq 사용
-			//}
+				if (pq.Contains(w)) pq.ChangeKey(w, dist[w]);
+				else pq.Insert(w, dist[w]);
+			}
 		}
 
 		PrintDist(dist);
@@ -115,7 +113,22 @@ public:
 	}
 
 	void PrintPaths() {
-		// TODO: prev 이용
+		for (int i = 0; i < prev.size(); i++) {
+			deque<int> path;
+			path.push_front(i);
+			int v = prev[i];
+			while (v != -1) {
+				path.push_front(v);
+				v = prev[v];
+			}
+
+			for (auto v : path) {
+				cout << v;
+				if (v != path.back())
+					cout << " -> ";
+			}
+			cout << endl;
+		}
 	}
 
 private:
