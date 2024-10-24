@@ -6,76 +6,72 @@
 #include <iomanip>
 using namespace std; // 편의용
 
-class UnionFind
-{
+class UnionFind {
 public:
 	vector<int> group;
 	int num_groups;
 
-	UnionFind(int N)
-		: group(N), num_groups(N)
-	{
+	UnionFind(int N) : group(N), num_groups(N) {
 		for (int i = 0; i < group.size(); i++)
 			group[i] = i;
 	}
 
-	int NumGroups()
-	{
+	int NumGroups() {
 		return num_groups;
 	}
 
-	bool Connected(int p, int q)
-	{
+	bool Connected(int p, int q) {
 		return Find(p) == Find(q);
 	}
 
 	/* Quick-Find 방식: Union()에서 미리 정리하기 때문에 Find()는 빠름 */
-	int Find(int p)
-	{
-		return group[p];
-	}
+	//int Find(int p) {
+	//	return group[p];
+	//}
 
-	void Union(int p, int q)
-	{
-		int pid = Find(p);
-		int qid = Find(q);
+	//void Union(int p, int q) {
+	//	int pid = Find(p);
+	//	int qid = Find(q);
 
-		if (pid == qid) return;
+	//	if (pid == qid) return;
 
-		for (int i = 0; i < group.size(); i++)
-		{
-			// TODO:
-		}
+	//	for (int i = 0; i < group.size(); i++) {
+	//		if (group[i] == pid)
+	//			group[i] = qid;
+	//	}
 
-		num_groups--;
-	}
+	//	num_groups--;
+	//}
 
 	/* Quick-Union 방식: Union()은 빠르고 Find()할 때 정리 */
-	/*
-	int Find(int p)
-	{
-		while (p != group[p])
-		{
-			// TODO:
+	int Find(int p) {
+		cout << "Find(" << p << ")" << endl;
+		if (p != group[p]) {
+			cout << "lms start" << endl;
+		}
+		while (p != group[p]) {
+			cout << "p : " << p << endl;
+			cout << "group[p] : " << group[p] << endl;
+			p = group[p];
 		}
 
 		return p;
 	}
 
-	void Union(int p, int q)
-	{
+	void Union(int p, int q) {
 		int i = Find(p);
 		int j = Find(q);
-		if (i == j) return;
+		if (i == j) {
+			cout << "i : " << i << " == j : " << j << endl;
+			return;
+		}
 
 		group[i] = j;
 
 		num_groups--;
 	}
-	*/
 
-	void Print()
-	{
+	void Print() {
 		cout << "Num groups = " << NumGroups() << endl;
 
 		cout << "Index:";

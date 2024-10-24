@@ -4,8 +4,7 @@
 #include <string>
 using namespace std;
 
-struct Node
-{
+struct Node {
 	string data; // char보다 디버깅 편리
 	int freq;
 	Node* left = nullptr;
@@ -13,19 +12,14 @@ struct Node
 };
 
 // std::priority_queue에서 사용할 MinHeapNode의 비교
-struct Compare
-{
-	bool operator()(Node* l, Node* r)
-	{
-		// TODO:
-		return false;
+struct Compare {
+	bool operator()(Node* l, Node* r) {
+		return l->freq > r->freq;
 	}
 };
 
-void PrintCodes(Node* root, string str)
-{
-	if (!root)
-		return;
+void PrintCodes(Node* root, string str) {
+	if (!root) return;
 
 	if (!root->left && !root->right) // leaf node이면 출력
 		cout << root->data << ": " << str << "\n";
@@ -34,8 +28,7 @@ void PrintCodes(Node* root, string str)
 	PrintCodes(root->right, str + "1");
 }
 
-void HuffmanCoding(vector<char> data, vector<int> freq)
-{
+void HuffmanCoding(vector<char> data, vector<int> freq) {
 	// freq가 작을 수록 우선순위가 높은 힙
 	// struct Compare에서 우선순위 비교
 	priority_queue<Node*, vector<Node*>, Compare> heap;
@@ -43,23 +36,26 @@ void HuffmanCoding(vector<char> data, vector<int> freq)
 	for (int i = 0; i < data.size(); ++i)
 		heap.push(new Node{ string(1, data[i]), freq[i] });
 
-	/*
-	while (heap.size() != 1)
-	{
+	while (heap.size() != 1) {
 		Node* left, * right, * top;
+		left = heap.top();
+		heap.pop();
+		right = heap.top();
+		heap.pop();
+		top = new Node{left->data + right->data, left->freq + right->freq};
 
-		// TODO:
+		top->left = left;
+		top->right = right;
+		heap.push(top);
 
 		cout << "(" << left->data << ", " << left->freq << ") + (" << right->data << ", " << right->freq << ") -> ";
 		cout << "(" << top->data << ", " << top->freq << ")" << endl;
 	}
-	*/
 
 	PrintCodes(heap.top(), "");
 }
 
-int main()
-{
+int main() {
 	vector<char> data = { 'a', 'b', 'c', 'd', 'e', 'f' };
 	vector<int> freq = { 45, 13, 12, 16, 9, 5 };
 

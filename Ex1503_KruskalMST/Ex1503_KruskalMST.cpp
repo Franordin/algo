@@ -4,30 +4,25 @@
 #include <vector>
 #include <list>
 
-struct Edge
-{
+struct Edge {
 	int u; // 한쪽 끝
 	int v; // 다른쪽 끝
 	double weight;
 
 	// 정렬할 때 사용
-	bool operator < (const Edge& other) const
-	{
+	bool operator < (const Edge& other) const {
 		return weight < other.weight;
 	}
 };
 
-void PrintEdges(vector<Edge>& edges)
-{
+void PrintEdges(vector<Edge>& edges) {
 	for (auto e : edges)
 		cout << "(" << e.u << ", " << e.v << ", " << e.weight << ")" << endl;
 }
 
-int main()
-{
+int main() {
 	// Kruskal 알고리듬에서는 간선만 사용하기 때문에 edges만 가지고 진행
-	vector<Edge> edges =
-	{
+	vector<Edge> edges = {
 		{ 0, 1, 4.0 },
 		{ 0, 7, 9.0 },
 		{ 1, 2, 8.0 },
@@ -53,8 +48,7 @@ int main()
 
 	UnionFind uf(9);
 
-	for (auto& e : edges)
-	{
+	for (auto& e : edges) {
 		// TODO:
 
 		mst_wt += e.weight;

@@ -2,27 +2,38 @@
 #include <utility>
 using namespace std;
 
-int main()
-{
+int main() {
 	UnionFind uf(4);
-	vector<pair<int, int>> tests =
-	{
+	vector<pair<int, int>> tests = {
 		{0, 1}, {1, 2}, {2, 3}, {3, 0}
 	};
 
-	uf.Print();
+	//uf.Print();
 
-	for (auto t : tests)
-	{
+	for (auto t : tests) {
+		cout << endl;
 		int u = t.first;
 		int v = t.second;
-		bool connected = uf.Connected(u, v);  // uf.Find(p) == uf.Find(q);
+		//bool connected = uf.Connected(u, v);  // uf.Find(p) == uf.Find(q);
 
-		cout << u << " " << v << " " << std::boolalpha << connected << endl;
+		//cout << u << " " << v << " " << std::boolalpha << connected << endl;
 		cout << "Union " << u << " " << v << endl;
 
 		uf.Union(u, v);
-
+		
 		uf.Print();
 	}
+
+	//cout << endl;
+	//cout << "connected test" << endl;
+
+	//for (auto t : tests) {
+	//	cout << endl;
+	//	int u = t.first;
+	//	int v = t.second;
+
+	//	bool connected = uf.Connected(u, v);  // uf.Find(p) == uf.Find(q);
+
+	//	cout << u << " " << v << " " << std::boolalpha << connected << endl;
+	//}
 }
